@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>زيادة المعرفة الصحية</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e3f2fd; /* خلفية بلون أزرق فاتح */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: flex-start; /* تعديل التوزيع ليبدأ من اليسار */
+            align-items: flex-start; /* تعديل المحاذاة لتكون من أعلى */
+            height: 100vh;
+        }
+
+        .sidebar {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 10px; /* زيادة الحشو داخل القائمة الجانبية */
+            margin-right: 10px; /* تقليل المسافة اليمنى */
+            width: 200px; /* تعديل عرض القائمة الجانبية */
+            height: 80%; /* تعديل ارتفاع القائمة الجانبية */
+            position: fixed; /* تثبيت القائمة */
+            z-index: 100;
+        }
+
+        .sidebar h3 {
+            text-align: center;
+            font-size: 16px;
+            color: #1565c0;
+            margin-bottom: 10px; /* تقليل المسافة السفلى */
+            border-bottom: 2px solid #1565c0;
+            padding-bottom: 8px;
+        }
+
+        .sidebar .diseases-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 75vh; /* تحديد الحد الأقصى للارتفاع */
+            overflow-y: auto; /* تمكين التمرير داخل القائمة فقط */
+        }
+
+.sidebar .diseases-list li {
+    background-color: #fce4ec; /* لون زهر فاتح */
+    color: #ad1457; /* لون النص */
+    margin: 3px 0;
+    padding: 6px 8px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+        .sidebar .diseases-list li:hover {
+            background-color: #f48fb1; /* لون الخلفية عند التمرير الزهري الفاتح */
+            transform: translateX(3px); /* تقليل التحريك */
+        }
+
+        .chat-container {
+            background-color: #ffffff;
+            width: 75%;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            margin-left: 210px; /* إتاحة مساحة للقائمة الجانبية */
+            position: relative;
+            height: 100vh;
+            padding: 10px;
+        }
+
+.chat-header {
+    background-color: #1e88e5; /* لون أزرق فاتح مثل الرسائل المرسلة من المستخدم */
+    padding: 10px;
+    text-align: center;
+    color: white;
+    font-size: 18px;
+}
+
+.chat-box {
+    padding: 10px;
+    background-color: #f5f5dc; /* لون بيج فاتح */
+    overflow-y: auto;
+    flex-grow: 1;
+    height: calc(100% - 60px);
+}
+
+        .message {
+            margin: 8px 0; /* تقليل المسافة بين الرسائل */
+            padding: 8px 12px;
+            border-radius: 20px;
+            max-width: 75%;
+            clear: both;
+            display: inline-block;
+            word-wrap: break-word;
+        }
+
+        .message.user {
+            background-color: #1e88e5; /* لون الرسائل المرسلة من المستخدم */
+            color: white;
+            float: right;
+            text-align: right;
+        }
+
+        .message.bot {
+            background-color: #bbdefb; /* لون الرسائل المرسلة من البوت */
+            color: black;
+            float: left;
+            text-align: left;
+        }
+
+        .chat-footer {
+            display: flex;
+            border-top: 1px solid #ddd;
+            background-color: white;
+            padding: 8px;
+        }
+
+        .chat-footer textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            resize: none;
+            height: 40px;
+            font-size: 14px; /* تقليل حجم الخط */
+        }
+
+        .chat-footer button {
+            background-color: #1565c0; /* زر الإرسال بلون أزرق غامق */
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            margin-left: 8px;
+            border-radius: 50%;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .chat-footer button:hover {
+            background-color: #0d47a1; /* لون أغمق عند التمرير على الزر */
+        }
+
+        .clearfix {
+            clear: both;
+        }
+
+        .loading-dots {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #1e88e5;
+            animation: bounce 1s infinite ease-in-out;
+        }
+
+        .loading-dots:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dots:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px); /* تقليل المسافة أثناء حركة النقاط */
+            }
+        }
+
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <h3>الأمراض الشائعة</h3>
+    <ul class="diseases-list">
+        <li>ارتفاع ضغط الدم</li>
+        <li>الاكتئاب</li>
+        <li>الباركنسون</li>
+        <li>فقر الدم</li>
+        <li>التهاب الكبد</li>
+        <li>الجلطة</li>
+        <li>الربو</li>
+        <li>الزهايمر</li>
+        <li>السكري</li>
+        <li>القلب</li>
+        <li>فرط نشاط الغدة الدرقية</li>
+        <li>قصور الغدة الدرقية</li>
+        <li>سرطان الرئة</li>
+        <li>سرطان الثدي</li>
+    </ul>
+</div>
+
+<div class="chat-container">
+    <div class="chat-header">
+        زيادة المعرفة الصحية
+    </div>
+    <div class="chat-box" id="chat-box">
+        <!-- رسائل المحادثة ستظهر هنا -->
+    </div>
+    <div class="chat-footer">
+        <textarea id="question" placeholder="اكتب سؤالك هنا..."></textarea>
+        <button id="send-btn">➤</button>
+    </div>
+</div>
+
+<script>
+    const chatBox = document.getElementById('chat-box');
+    const sendButton = document.getElementById('send-btn');
+    const questionInput = document.getElementById('question');
+
+    function addMessage(message, sender) {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message', sender);
+        messageElement.innerText = message;
+        chatBox.appendChild(messageElement);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function addLoadingDots() {
+        const dotsContainer = document.createElement('div');
+        dotsContainer.classList.add('message', 'bot');
+        dotsContainer.id = 'loading-dots';
+
+        for (let i = 0; i < 3; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('loading-dots');
+            dotsContainer.appendChild(dot);
+        }
+
+        chatBox.appendChild(dotsContainer);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function removeLoadingDots() {
+        const loadingDots = document.getElementById('loading-dots');
+        if (loadingDots) {
+            chatBox.removeChild(loadingDots);
+        }
+    }
+
+    sendButton.addEventListener('click', async () => {
+        const question = questionInput.value.trim();
+
+        if (question === '') {
+            return;
+        }
+
+        addMessage(question, 'user');
+        questionInput.value = '';
+        addLoadingDots();
+
+        try {
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ question: question })
+            });
+
+            const result = await response.json();
+            removeLoadingDots();
+
+            if (response.ok) {
+                addMessage(result.response, 'bot');
+            } else {
+                addMessage('حدث خطأ أثناء معالجة طلبك.', 'bot');
+            }
+        } catch (error) {
+            removeLoadingDots();
+            addMessage('فشل الاتصال بالخادم. يرجى المحاولة لاحقًا.', 'bot');
+        }
+    });
+
+    questionInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            sendButton.click();
+        }
+    });
+</script>
+</body>
+</html>
